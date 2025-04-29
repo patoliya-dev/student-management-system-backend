@@ -1,7 +1,7 @@
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, reopened, ready_for_review]
-  issue_comment:
+
 jobs:
   pr_agent_job:
     if: ${{ github.event.sender.type != 'Bot' }}
@@ -10,11 +10,11 @@ jobs:
       issues: write
       pull-requests: write
       contents: write
-    name: Run pr agent on every pull request, respond to user comments
     steps:
       - name: PR Agent action step
         id: pragent
-        uses: qodo-ai/pr-agent@main
+        uses: qodo-ai/pr-agent@v1.1.9
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LOG_LEVEL: debug

@@ -74,12 +74,12 @@ export const viewLeaves = async (
       case "requestedTo":
         orderBy = { requestedTo: { name: sort as Prisma.SortOrder } };
         break;
-      case "startDate":
-        orderBy = { startDate: sort as Prisma.SortOrder };
-        break;
-      case "endDate":
-        orderBy = { endDate: sort as Prisma.SortOrder };
-        break;
+      // case "startDate":
+      //   orderBy = { startDate: sort as Prisma.SortOrder };
+      //   break;
+      // case "endDate":
+      //   orderBy = { endDate: sort as Prisma.SortOrder };
+      //   break;
       case "status":
         orderBy = { status: sort as Prisma.SortOrder };
         break;
@@ -108,12 +108,6 @@ export const viewLeaves = async (
         orderBy,
         select: {
           id: true,
-          user: {
-            select: {
-              name: true,
-              email: true,
-            },
-          },
           requestedTo: {
             select: {
               name: true,
