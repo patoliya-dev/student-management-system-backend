@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+enum provider {
+  google
+  credentials
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum Department {
+  CSE
+  EEE
+  ADMIN
+}
+
+enum LeaveType{
+  HALF_DAY
+  FULL_DAY
+}
+
+model Role {
+  id        String   @id @default(cuid())
+  name      String
+  priority  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
+model User {
+  id              String         @id @default(cuid())
+  email           String         @unique
+  name            String
+  password        String?
+  provider        provider     @default(credentials)
+  gender          Gender
+  image           String
+  phone           String
+  address         String
+  roleId          String
+  role            Role           @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  department      Department
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  leaveRequests   LeaveRequest[] @relation("UserLeaveRequests")
+  approvedLeaves  LeaveRequest[] @relation("UserApprovedLeaves")
+  requestedLeaves LeaveRequest[] @relation("UserRequests")
+  userLeaveTables UserLeaveTable[]
+  blogs           Blogs[]
+}
+
+model LeaveRequest {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation("UserLeaveRequests", fields: [userId], references: [id], onDelete: Cascade)
+  requestTo    String?  @default("")
+  requestedTo  User?    @relation("UserRequests", fields: [requestTo], references: [id], onDelete: Cascade)
+  approveBy    String?  @default("")
+  approvedBy   User?    @relation("UserApprovedLeaves", fields: [approveBy], references: [id], onDelete: Cascade)
+  startDate    DateTime
+  endDate      DateTime
+  status       LeaveStatus
+  leaveType    LeaveType
+  reason       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model UserLeaveTable {
+  id                   String    @id @default(cuid())
+  userId               String    @unique
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalLeaves          Int       @default(30)
+  usedLeaves           Float      @default(0)
+  availableLeave       Float       @default(30)
+  academicYear         String
+  totalWorkingDays     Int       @default(200)
+  attendancePercentage Float     @default(100)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
+
+model Otp {
+  id        String   @id @default(cuid())
+  email     String @unique
+  otp       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Blogs{
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  authorId String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
