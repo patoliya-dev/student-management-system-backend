@@ -77,9 +77,9 @@ export const signUpUser = async (
     });
   } catch (error) {
     console.error("Signup error:", error);
-    res
-      .status(statusCodes.internalServerError)
-      .json({ error: serverError.internalServerError });
+    // res
+    //   .status(statusCodes.internalServerError)
+    //   .json({ error: serverError.internalServerError });
   }
 };
 
@@ -92,13 +92,13 @@ export const updateUser = async (
 
     const { id } = req.params;
 
-    if (!validation.success) {
-      res.status(statusCodes.badRequest).json({
-        error: userError.invalidInput,
-        details: validation.error.errors,
-      });
-      return;
-    }
+    // if (!validation.success) {
+    //   res.status(statusCodes.badRequest).json({
+    //     error: userError.invalidInput,
+    //     details: validation.error.errors,
+    //   });
+    //   return;
+    // }
 
     const { email, address, department, gender, name, phone, roleId } =
       validation.data;
@@ -136,9 +136,9 @@ export const deleteUser = async (
   try {
     const { id } = req.params;
 
-    const deleteUser = await db.user.delete({
-      where: { id: id },
-    });
+    // const deleteUser = await db.user.delete({
+    //   where: { id: id },
+    // });
 
     res
       .status(statusCodes.ok)
